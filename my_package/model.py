@@ -8,12 +8,15 @@ from torch import Tensor
 from torch.utils.data import Dataset
 
 
+# TODO: Move to different file
 class MNISTDataset(Dataset):
+    # TODO: Add type hints and docstring
     def __init__(self, imgs, targets: Optional[List[int]] = None, transform: Optional[Callable] = None) -> None:
         self.imgs = imgs
         self.targets = targets
         self.transform = transform
 
+    # TODO: Add type hints and docstring
     def __getitem__(self, idx: int):
         img = self.imgs[idx]
 
@@ -31,6 +34,7 @@ class MNISTDataset(Dataset):
 
 
 class MNISTModel(nn.Module):
+    # TODO: Add type hints and docstring
     def __init__(self, hidden_size: int) -> None:
         super().__init__()
         self.num_classes = 10
@@ -49,6 +53,7 @@ class MNISTModel(nn.Module):
             nn.Linear(hidden_size, self.num_classes),
         )
 
+    # TODO: Add type hints and docstring
     def forward(self, x) -> Tensor:
         x = self.model(x)
         return F.log_softmax(x, dim=1)
