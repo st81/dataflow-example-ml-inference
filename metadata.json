@@ -1,0 +1,54 @@
+{
+    "name": "Dataflow example ml inference.",
+    "description": "This example pipeline runs a model inference on a dataset using a trained model.",
+    "parameters": [
+        {
+            "name": "dataset_csv_path",
+            "label": "Dataset CSV path",
+            "helpText": "The path to the dataset CSV file. Must be a GCS path.",
+            "isOptional": false
+        },
+        {
+            "name": "dataset_img_root",
+            "label": "Dataset image root",
+            "helpText": "The root path to the dataset images. Must be a GCS path.",
+            "isOptional": false
+        },
+        {
+            "name": "model_checkpoint_path",
+            "label": "Model checkpoint path",
+            "helpText": "The path to the model checkpoint file. Must be a GCS path.",
+            "isOptional": false
+        },
+        {
+            "name": "device",
+            "label": "Device",
+            "helpText": "The device to run the model on.",
+            "isOptional": true
+        },
+        {
+            "name": "output_table_id",
+            "label": "Output table ID",
+            "helpText": "BigQuery output table ID.",
+            "isOptional": false
+        },
+        {
+            "name": "autoscaling_algorithm",
+            "label": "Autoscaling algorithm",
+            "helpText": "The autoscaling algorithm to use.",
+            "isOptional": true
+        },
+        {
+            "name": "dataflow_service_option",
+            "label": "Dataflow service option",
+            "helpText": "The Dataflow service option to use.",
+            "isOptional": true
+        },
+        {
+            "name": "disk_size_gb",
+            "label": "Disk size GB",
+            "helpText": "The disk size in GB to use.",
+            "isOptional": true
+        }
+    ]
+}
