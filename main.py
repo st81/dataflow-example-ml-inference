@@ -34,12 +34,14 @@ def split_list_to_chunks(lst, n):
 # TODO: Add type hints
 def load_dataset_from_csv(csv_path: str):
     # TODO: Add Docstring
+    
+    # TODO: Verify if using the Python SDK instead of gsutil reduces the image size.
     os.system(f"gsutil cp {csv_path} {DATASET_CSV_PATH}")
     df = pd.read_csv(DATASET_CSV_PATH)
     print(df)
     data = df.to_dict(orient="records")
-    # Make chunk size as command line argument.
-    # Current value is determined by just intuition.
+    # TODO: Make chunk size as command line argument.
+    # Note that current value is determined by just intuition.
     return list(split_list_to_chunks(data, 10))
 
 
@@ -109,6 +111,7 @@ def run(args, beam_args):
             | beam.FlatMap(lambda x: x)
             | beam.io.WriteToBigQuery(
                 table=args.output_table_id,
+                # TODO: Pass schema as command line argument.
                 schema="img_filename:STRING,target:INTEGER,prediction:INTEGER,created_at:TIMESTAMP",
                 write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
                 create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
