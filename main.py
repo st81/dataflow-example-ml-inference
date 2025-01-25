@@ -128,7 +128,7 @@ def run(args, beam_args):
                 create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             )
         )
-
+    p.run()
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
