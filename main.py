@@ -67,7 +67,7 @@ def read_images(data: List[Dict[str, Union[str, int]]], img_root: str):
 def predict(img_data_chunk, device: str):
     # TODO: Add Docstring
 
-    if torch.cuda.is_available():
+    if device == "cuda" and torch.cuda.is_available():
         logging.info(f"Using GPU: {torch.cuda.get_device_name(0)}")
     elif device == "cpu":
         logging.warning("Using CPU.")
@@ -129,6 +129,7 @@ def run(args, beam_args):
             )
         )
     p.run()
+
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
