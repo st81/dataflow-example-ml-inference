@@ -1,5 +1,6 @@
 import datetime
 import io
+import logging
 import os
 from argparse import ArgumentParser
 from pathlib import Path
@@ -34,7 +35,7 @@ def split_list_to_chunks(lst, n):
 # TODO: Add type hints
 def load_dataset_from_csv(csv_path: str):
     # TODO: Add Docstring
-    
+
     # TODO: Verify if using the Python SDK instead of gsutil reduces the image size.
     os.system(f"gsutil cp {csv_path} {DATASET_CSV_PATH}")
     df = pd.read_csv(DATASET_CSV_PATH)
@@ -65,6 +66,16 @@ def read_images(data: List[Dict[str, Union[str, int]]], img_root: str):
 # TODO: Add type hints
 def predict(img_data_chunk, device: str):
     # TODO: Add Docstring
+
+    if torch.cuda.is_available():
+        logging.info(f"Using GPU: {torch.cuda.get_device_name(0)}")
+    elif device == "cpu":
+        logging.warning("Using CPU.")
+    else:
+        raise RuntimeError("No GPUs found.")
+
+    model.eval()
+    model.to(args.device)
 
     imgs = [d["img"] for d in img_data_chunk]
     targets = [d["target"] for d in img_data_chunk]
@@ -120,6 +131,8 @@ def run(args, beam_args):
 
 
 if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.INFO)
+
     parser = ArgumentParser()
     parser.add_argument(
         "--dataset_csv_path", type=str, required=True, help="Path to the dataset CSV. Must be a GCS path."
@@ -146,12 +159,11 @@ if __name__ == "__main__":
 
     # TODO: Verify if using the Python SDK instead of gsutil reduces the image size.
     os.system(f"gsutil cp {args.model_checkpoint_path} {MODEL_CHECKPOINT_PATH}")
-    checkpoint = torch.load(MODEL_CHECKPOINT_PATH, map_location=args.device)
+    # Load on CPU because worker to launch Flex Template don't have GPU.
+    checkpoint = torch.load(MODEL_CHECKPOINT_PATH, map_location="cpu")
     hparams = checkpoint["hyper_parameters"]
     # Make `model` a global variable to avoid load model weights in each worker.
     model = MNISTModel(hidden_size=hparams["hidden_size"])
     model.load_state_dict(checkpoint["state_dict"])
-    model.eval()
-    model.to(args.device)
 
     run(args, beam_args)
